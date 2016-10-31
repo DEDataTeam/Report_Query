@@ -1,0 +1,26 @@
+SELECT P.Listing_ID, Status, Listing_type, Price_Current as Price, 
+    B.AREA, Street_num + ISNULL(' ' + Street_dir, '') + ' ' + Street as Addr, ISNULL(Apt_num, '') as Apt_num, 
+    CONVERT(varchar(10), DATE_CONT, 101) as [Contract Date], 
+    CONVERT(varchar(10), DATE_COE, 101) as [Closed Date], 
+    CASE WHEN B.bldg_type in ('THSF', 'THMR') THEN 'Townhouse' ELSE B.Ownership end as Bldg_Type
+FROM LIMO.dbo.Propmain P with (nolock)
+    inner join LIMO.dbo.Building B with (nolock) ON P.bldg_id = B.bldg_id
+    left join limo.dbo.unit U with (nolock) ON P.unit_id = U.unit_id
+WHERE P.Price_Current >= 4000000 
+    and P.prop_type = 1
+    and B.AREA = 'M'
+    and (B.OWNERSHIP IN ('COND', 'COOP', 'CNDP') or B.bldg_Type IN ('THSF', 'THMR'))
+    and P.DATE_CONT >=  '10-03-2016' and P.DATE_CONT < '10-09-2016'
+UNION ALL
+SELECT P.Listing_ID, Status, Listing_type, Price_Current as Price, 
+    B.AREA, Street_num + ISNULL(' ' + Street_dir, '') + ' ' + Street as Addr, '' as Apt_num, 
+    CONVERT(varchar(10), DATE_CONT, 101) as [Contract Date], 
+    CONVERT(varchar(10), DATE_COE, 101) as [Closed Date],
+    'Building' as Bldg_Type
+FROM LIMO.dbo.Propmain P with (nolock)
+    inner join LIMO.dbo.Building B with (nolock) ON P.bldg_id = B.bldg_id
+WHERE P.Price_Current >= 4000000 
+    and P.prop_type= 3  
+    and B.AREA = 'M'
+   and P.DATE_CONT >=  '10-03-2016' and P.DATE_CONT < '10-09-2016'
+order by CONVERT(varchar(10), DATE_CONT, 101), P.Price_Current
