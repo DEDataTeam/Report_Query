@@ -1,0 +1,22 @@
+select 
+P.Listing_ID,
+B.STREET_NUM, 
+B.STREET,
+U.APT_NUM,
+U.SQFT_INT, 
+F1.Price, 
+F1.NeighborhoodID, 
+F1.OwnershipTypeID, 
+F1.MonthID,
+DATEDIFF(day, P.DATE_List, P.DATE_cont) as DOM, 
+P.DATE_LIST, 
+P.DATE_CONT  
+from ARCHIVES.MarketShare.FactPropmain F1 inner join limo.dbo.unit U on U.UNIT_ID = F1.UNITID inner join limo.dbo.propmain P on P.listing_ID = F1.listingID inner join LIMO.dbo.Building B on P.bldg_id = B.bldg_id
+where F1.BoroughID = 'M' 
+and F1.StatusID in ('CSGN') 
+and F1.PropertyTypeID = '1'
+and F1.OwnershipTypeID in ('COND', 'coop', 'cndp')
+and ISNULL(P.NEW_DEV, '') != 'Y' 
+and ISNULL(B.NEW_DEV_YN, '') != 'Y'
+AND f1.MonthID >= '201501'
+and F1.MonthID <= '201610' 
