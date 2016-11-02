@@ -20,3 +20,4 @@ and ISNULL(P.NEW_DEV, '') != 'Y'
 and ISNULL(B.NEW_DEV_YN, '') != 'Y'
 AND f1.MonthID >= '201501'
 and F1.MonthID <= '201610' 
+## Simply change the date you would like to pull out.## 
